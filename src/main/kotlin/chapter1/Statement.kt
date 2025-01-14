@@ -4,6 +4,10 @@ import java.text.NumberFormat
 import java.util.*
 
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
+    fun playFor(performance: Invoice.Performance): Play {
+        return plays[performance.playID] ?: throw RuntimeException("알 수 없는 장르: ${performance.playID}")
+    }
+
     fun amountFor(play: Play, performance: Invoice.Performance): Int {
         var result: Int
 
@@ -27,10 +31,6 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         }
 
         return result
-    }
-
-    fun playFor(performance: Invoice.Performance): Play {
-        return plays[performance.playID] ?: throw RuntimeException("알 수 없는 장르: ${performance.playID}")
     }
 
     var totalAmount = 0
