@@ -46,6 +46,6 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     }
 
     result += "총액: ${format.format(totalAmount / 100.0)}\n"
-    result += "적립 포인트: $volumeCredits 점\n"
+    result += "적립 포인트: ${volumeCredits}점\n"
     return result
 }
