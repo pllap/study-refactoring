@@ -4,6 +4,31 @@ import java.text.NumberFormat
 import java.util.*
 
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
+    fun amountFor(play: Play, performance: Invoice.Performance): Int {
+        var result: Int
+
+        when (play.type) {
+            "tragedy" -> {
+                result = 40000
+                if (performance.audience > 30) {
+                    result += 1000 * (performance.audience - 30)
+                }
+            }
+
+            "comedy" -> {
+                result = 30000
+                if (performance.audience > 20) {
+                    result += 10000 + 500 * (performance.audience - 20)
+                }
+                result += 300 * performance.audience
+            }
+
+            else -> throw RuntimeException("알 수 없는 장르: ${play.type}")
+        }
+
+        return result
+    }
+
     fun playFor(performance: Invoice.Performance): Play {
         return plays[performance.playID] ?: throw RuntimeException("알 수 없는 장르: ${performance.playID}")
     }
@@ -33,30 +58,5 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
 
     result += "총액: ${format.format(totalAmount / 100.0)}\n"
     result += "적립 포인트: ${volumeCredits}점\n"
-    return result
-}
-
-private fun amountFor(play: Play, performance: Invoice.Performance): Int {
-    var result: Int
-
-    when (play.type) {
-        "tragedy" -> {
-            result = 40000
-            if (performance.audience > 30) {
-                result += 1000 * (performance.audience - 30)
-            }
-        }
-
-        "comedy" -> {
-            result = 30000
-            if (performance.audience > 20) {
-                result += 10000 + 500 * (performance.audience - 20)
-            }
-            result += 300 * performance.audience
-        }
-
-        else -> throw RuntimeException("알 수 없는 장르: ${play.type}")
-    }
-
     return result
 }
