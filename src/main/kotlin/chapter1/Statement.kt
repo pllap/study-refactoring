@@ -12,20 +12,20 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         it.minimumFractionDigits = 2
     }
 
-    for (perf in invoice.performances) {
-        val play = plays[perf.playID]!!
+    for (performance in invoice.performances) {
+        val play = plays[performance.playID]!!
 
-        val thisAmount = amountFor(play, perf)
+        val thisAmount = amountFor(play, performance)
 
         // 포인트를 적립한다.
-        volumeCredits += maxOf(perf.audience - 30, 0)
+        volumeCredits += maxOf(performance.audience - 30, 0)
         // 희극 관객 5명마다 추가 포인트를 제공한다.
         if ("comedy" == play.type) {
-            volumeCredits += perf.audience / 5
+            volumeCredits += performance.audience / 5
         }
 
         // 청구 내역을 출력한다.
-        result += "  ${play.name}: ${format.format(thisAmount / 100.0)} (${perf.audience}석)\n"
+        result += "  ${play.name}: ${format.format(thisAmount / 100.0)} (${performance.audience}석)\n"
         totalAmount += thisAmount
     }
 
@@ -34,23 +34,23 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     return result
 }
 
-private fun amountFor(play: Play, perf: Invoice.Performance): Int {
+private fun amountFor(play: Play, performance: Invoice.Performance): Int {
     var result: Int
 
     when (play.type) {
         "tragedy" -> {
             result = 40000
-            if (perf.audience > 30) {
-                result += 1000 * (perf.audience - 30)
+            if (performance.audience > 30) {
+                result += 1000 * (performance.audience - 30)
             }
         }
 
         "comedy" -> {
             result = 30000
-            if (perf.audience > 20) {
-                result += 10000 + 500 * (perf.audience - 20)
+            if (performance.audience > 20) {
+                result += 10000 + 500 * (performance.audience - 20)
             }
-            result += 300 * perf.audience
+            result += 300 * performance.audience
         }
 
         else -> throw RuntimeException("알 수 없는 장르: ${play.type}")
