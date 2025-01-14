@@ -17,19 +17,17 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     }
 
     for (performance in invoice.performances) {
-        val play = playFor(performance)
-
-        val thisAmount = amountFor(play, performance)
+        val thisAmount = amountFor(playFor(performance), performance)
 
         // 포인트를 적립한다.
         volumeCredits += maxOf(performance.audience - 30, 0)
         // 희극 관객 5명마다 추가 포인트를 제공한다.
-        if ("comedy" == play.type) {
+        if ("comedy" == playFor(performance).type) {
             volumeCredits += performance.audience / 5
         }
 
         // 청구 내역을 출력한다.
-        result += "  ${play.name}: ${format.format(thisAmount / 100.0)} (${performance.audience}석)\n"
+        result += "  ${playFor(performance).name}: ${format.format(thisAmount / 100.0)} (${performance.audience}석)\n"
         totalAmount += thisAmount
     }
 
