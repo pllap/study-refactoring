@@ -4,6 +4,10 @@ import java.text.NumberFormat
 import java.util.*
 
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
+    fun playFor(performance: Invoice.Performance): Play {
+        return plays[performance.playID] ?: throw RuntimeException("알 수 없는 장르: ${performance.playID}")
+    }
+
     var totalAmount = 0
     var volumeCredits = 0
     var result = "청구 내역 (고객명: ${invoice.customer})\n"
@@ -13,7 +17,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     }
 
     for (performance in invoice.performances) {
-        val play = plays[performance.playID]!!
+        val play = playFor(performance)
 
         val thisAmount = amountFor(play, performance)
 
