@@ -8,10 +8,10 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         return plays[performance.playID] ?: throw RuntimeException("알 수 없는 장르: ${performance.playID}")
     }
 
-    fun amountFor(play: Play, performance: Invoice.Performance): Int {
+    fun amountFor(performance: Invoice.Performance): Int {
         var result: Int
 
-        when (play.type) {
+        when (playFor(performance).type) {
             "tragedy" -> {
                 result = 40000
                 if (performance.audience > 30) {
@@ -27,7 +27,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
                 result += 300 * performance.audience
             }
 
-            else -> throw RuntimeException("알 수 없는 장르: ${play.type}")
+            else -> throw RuntimeException("알 수 없는 장르: ${playFor(performance).type}")
         }
 
         return result
@@ -42,7 +42,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     }
 
     for (performance in invoice.performances) {
-        val thisAmount = amountFor(playFor(performance), performance)
+        val thisAmount = amountFor(performance)
 
         // 포인트를 적립한다.
         volumeCredits += maxOf(performance.audience - 30, 0)
