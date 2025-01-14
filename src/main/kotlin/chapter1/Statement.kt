@@ -3,25 +3,6 @@ package chapter1
 import java.text.NumberFormat
 import java.util.*
 
-fun main() {
-    val invoice = Invoice(
-        "BigCo",
-        listOf(
-            Invoice.Performance("hamlet", 55),
-            Invoice.Performance("as-like", 35),
-            Invoice.Performance("othello", 40),
-        )
-    )
-
-    val plays = mapOf(
-        "hamlet" to Play("Hamlet", "tragedy"),
-        "as-like" to Play("As You Like It", "comedy"),
-        "othello" to Play("Othello", "tragedy"),
-    )
-
-    println(statement(invoice, plays))
-}
-
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     var totalAmount = 0
     var volumeCredits = 0
