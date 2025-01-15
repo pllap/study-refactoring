@@ -7,5 +7,6 @@ data class StatementData(
     data class Performance(
         val play: Play,
         val audience: Int,
+        val amount: Int,
     )
 }

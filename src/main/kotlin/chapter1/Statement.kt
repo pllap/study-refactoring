@@ -8,23 +8,10 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         return plays[performance.playID] ?: throw RuntimeException("알 수 없는 장르: ${performance.playID}")
     }
 
-    val statementData = StatementData(
-        customer = invoice.customer,
-        performances = invoice.performances.map {
-            StatementData.Performance(
-                play = playFor(it),
-                audience = it.audience,
-            )
-        }
-    )
-    return renderPlainText(statementData, plays)
-}
-
-fun renderPlainText(statementData: StatementData, plays: Map<String, Play>): String {
-    fun amountFor(performance: StatementData.Performance): Int {
+    fun amountFor(performance: Invoice.Performance): Int {
         var result: Int
 
-        when (performance.play.type) {
+        when (playFor(performance).type) {
             "tragedy" -> {
                 result = 40000
                 if (performance.audience > 30) {
@@ -40,11 +27,26 @@ fun renderPlainText(statementData: StatementData, plays: Map<String, Play>): Str
                 result += 300 * performance.audience
             }
 
-            else -> throw RuntimeException("알 수 없는 장르: ${performance.play.type}")
+            else -> throw RuntimeException("알 수 없는 장르: ${playFor(performance).type}")
         }
 
         return result
     }
+
+    val statementData = StatementData(
+        customer = invoice.customer,
+        performances = invoice.performances.map {
+            StatementData.Performance(
+                play = playFor(it),
+                audience = it.audience,
+                amount = amountFor(it),
+            )
+        }
+    )
+    return renderPlainText(statementData, plays)
+}
+
+fun renderPlainText(statementData: StatementData, plays: Map<String, Play>): String {
 
     fun totalVolumeCredits(): Int {
         var result = 0
@@ -65,7 +67,7 @@ fun renderPlainText(statementData: StatementData, plays: Map<String, Play>): Str
         var result = 0
 
         for (performance in statementData.performances) {
-            result += amountFor(performance)
+            result += performance.amount
         }
 
         return result
@@ -84,7 +86,7 @@ fun renderPlainText(statementData: StatementData, plays: Map<String, Play>): Str
 
     for (performance in statementData.performances) {
         // 청구 내역을 출력한다.
-        result += "  ${performance.play.name}: ${usd(amountFor(performance))} (${performance.audience}석)\n"
+        result += "  ${performance.play.name}: ${usd(performance.amount)} (${performance.audience}석)\n"
     }
 
     result += "총액: ${usd(totalAmount())}\n"
