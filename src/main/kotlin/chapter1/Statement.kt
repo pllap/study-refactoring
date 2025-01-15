@@ -6,7 +6,7 @@ import java.util.*
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     val statementData = StatementData(
         customer = invoice.customer,
-        performances = invoice.performances,
+        performances = invoice.performances.toList(),
     )
     return renderPlainText(statementData, plays)
 }
