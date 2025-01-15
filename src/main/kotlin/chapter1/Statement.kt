@@ -58,18 +58,23 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         return result
     }
 
-    var result = "청구 내역 (고객명: ${invoice.customer})\n"
-    val format = NumberFormat.getCurrencyInstance(Locale.US).also {
-        it.maximumFractionDigits = 2
-        it.minimumFractionDigits = 2
+    fun usd(number: Double): String {
+        return NumberFormat.getCurrencyInstance(Locale.US)
+            .also {
+                it.maximumFractionDigits = 2
+                it.minimumFractionDigits = 2
+            }
+            .format(number)
     }
+
+    var result = "청구 내역 (고객명: ${invoice.customer})\n"
 
     for (performance in invoice.performances) {
         // 청구 내역을 출력한다.
-        result += "  ${playFor(performance).name}: ${format.format(amountFor(performance) / 100.0)} (${performance.audience}석)\n"
+        result += "  ${playFor(performance).name}: ${usd(amountFor(performance) / 100.0)} (${performance.audience}석)\n"
     }
 
-    result += "총액: ${format.format(totalAmountFor(invoice.performances) / 100.0)}\n"
+    result += "총액: ${usd(totalAmountFor(invoice.performances) / 100.0)}\n"
     result += "적립 포인트: ${volumeCreditsFor(invoice.performances)}점\n"
     return result
 }
