@@ -4,10 +4,11 @@ import java.text.NumberFormat
 import java.util.*
 
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
-    return renderPlainText(invoice, plays)
+    val statementData = StatementData
+    return renderPlainText(statementData, invoice, plays)
 }
 
-fun renderPlainText(invoice: Invoice, plays: Map<String, Play>): String {
+fun renderPlainText(statementData: StatementData, invoice: Invoice, plays: Map<String, Play>): String {
     fun playFor(performance: Invoice.Performance): Play {
         return plays[performance.playID] ?: throw RuntimeException("알 수 없는 장르: ${performance.playID}")
     }
