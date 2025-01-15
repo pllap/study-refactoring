@@ -6,6 +6,7 @@ import java.util.*
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     val statementData = StatementData(
         customer = invoice.customer,
+        performances = invoice.performances,
     )
     return renderPlainText(statementData, invoice, plays)
 }
@@ -43,7 +44,7 @@ fun renderPlainText(statementData: StatementData, invoice: Invoice, plays: Map<S
     fun totalVolumeCredits(): Int {
         var result = 0
 
-        for (performance in invoice.performances) {
+        for (performance in statementData.performances) {
             // 포인트를 적립한다.
             result += maxOf(performance.audience - 30, 0)
             // 희극 관객 5명마다 추가 포인트를 제공한다.
@@ -58,7 +59,7 @@ fun renderPlainText(statementData: StatementData, invoice: Invoice, plays: Map<S
     fun totalAmount(): Int {
         var result = 0
 
-        for (performance in invoice.performances) {
+        for (performance in statementData.performances) {
             result += amountFor(performance)
         }
 
@@ -76,7 +77,7 @@ fun renderPlainText(statementData: StatementData, invoice: Invoice, plays: Map<S
 
     var result = "청구 내역 (고객명: ${statementData.customer})\n"
 
-    for (performance in invoice.performances) {
+    for (performance in statementData.performances) {
         // 청구 내역을 출력한다.
         result += "  ${playFor(performance).name}: ${usd(amountFor(performance))} (${performance.audience}석)\n"
     }
