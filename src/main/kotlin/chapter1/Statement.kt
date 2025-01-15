@@ -48,10 +48,10 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         return result
     }
 
-    fun totalAmountFor(performances: List<Invoice.Performance>): Int {
+    fun totalAmount(): Int {
         var result = 0
 
-        for (performance in performances) {
+        for (performance in invoice.performances) {
             result += amountFor(performance)
         }
 
@@ -74,7 +74,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         result += "  ${playFor(performance).name}: ${usd(amountFor(performance))} (${performance.audience}석)\n"
     }
 
-    result += "총액: ${usd(totalAmountFor(invoice.performances))}\n"
+    result += "총액: ${usd(totalAmount())}\n"
     result += "적립 포인트: ${totalVolumeCredits()}점\n"
     return result
 }
