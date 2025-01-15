@@ -33,8 +33,22 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         return result
     }
 
+    fun volumeCreditsFor(performances: List<Invoice.Performance>): Int {
+        var result = 0
+
+        for (performance in performances) {
+            // 포인트를 적립한다.
+            result += maxOf(performance.audience - 30, 0)
+            // 희극 관객 5명마다 추가 포인트를 제공한다.
+            if ("comedy" == playFor(performance).type) {
+                result += performance.audience / 5
+            }
+        }
+
+        return result
+    }
+
     var totalAmount = 0
-    var volumeCredits = 0
     var result = "청구 내역 (고객명: ${invoice.customer})\n"
     val format = NumberFormat.getCurrencyInstance(Locale.US).also {
         it.maximumFractionDigits = 2
@@ -42,19 +56,12 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     }
 
     for (performance in invoice.performances) {
-        // 포인트를 적립한다.
-        volumeCredits += maxOf(performance.audience - 30, 0)
-        // 희극 관객 5명마다 추가 포인트를 제공한다.
-        if ("comedy" == playFor(performance).type) {
-            volumeCredits += performance.audience / 5
-        }
-
         // 청구 내역을 출력한다.
         result += "  ${playFor(performance).name}: ${format.format(amountFor(performance) / 100.0)} (${performance.audience}석)\n"
         totalAmount += amountFor(performance)
     }
 
     result += "총액: ${format.format(totalAmount / 100.0)}\n"
-    result += "적립 포인트: ${volumeCredits}점\n"
+    result += "적립 포인트: ${volumeCreditsFor(invoice.performances)}점\n"
     return result
 }
