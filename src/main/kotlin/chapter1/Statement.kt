@@ -43,10 +43,10 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
             )
         }
     )
-    return renderPlainText(statementData, plays)
+    return renderPlainText(statementData)
 }
 
-fun renderPlainText(statementData: StatementData, plays: Map<String, Play>): String {
+fun renderPlainText(statementData: StatementData): String {
 
     fun totalVolumeCredits(): Int {
         var result = 0
