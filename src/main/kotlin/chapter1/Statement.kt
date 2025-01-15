@@ -4,11 +4,15 @@ import java.text.NumberFormat
 import java.util.*
 
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
+    fun playFor(performance: Invoice.Performance): Play {
+        return plays[performance.playID] ?: throw RuntimeException("알 수 없는 장르: ${performance.playID}")
+    }
+
     val statementData = StatementData(
         customer = invoice.customer,
         performances = invoice.performances.map {
             StatementData.Performance(
-                play = plays[it.playID] ?: throw RuntimeException("알 수 없는 장르: ${it.playID}"),
+                play = playFor(it),
                 audience = it.audience,
             )
         }
@@ -17,10 +21,6 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
 }
 
 fun renderPlainText(statementData: StatementData, plays: Map<String, Play>): String {
-    fun playFor(performance: Invoice.Performance): Play {
-        return plays[performance.playID] ?: throw RuntimeException("알 수 없는 장르: ${performance.playID}")
-    }
-
     fun amountFor(performance: StatementData.Performance): Int {
         var result: Int
 
