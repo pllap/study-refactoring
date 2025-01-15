@@ -8,10 +8,10 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         customer = invoice.customer,
         performances = invoice.performances,
     )
-    return renderPlainText(statementData, invoice, plays)
+    return renderPlainText(statementData, plays)
 }
 
-fun renderPlainText(statementData: StatementData, invoice: Invoice, plays: Map<String, Play>): String {
+fun renderPlainText(statementData: StatementData, plays: Map<String, Play>): String {
     fun playFor(performance: Invoice.Performance): Play {
         return plays[performance.playID] ?: throw RuntimeException("알 수 없는 장르: ${performance.playID}")
     }
