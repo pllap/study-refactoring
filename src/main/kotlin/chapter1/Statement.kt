@@ -4,7 +4,9 @@ import java.text.NumberFormat
 import java.util.*
 
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
-    val statementData = StatementData
+    val statementData = StatementData(
+        customer = invoice.customer,
+    )
     return renderPlainText(statementData, invoice, plays)
 }
 
@@ -72,7 +74,7 @@ fun renderPlainText(statementData: StatementData, invoice: Invoice, plays: Map<S
             .format(number / 100.0)
     }
 
-    var result = "청구 내역 (고객명: ${invoice.customer})\n"
+    var result = "청구 내역 (고객명: ${statementData.customer})\n"
 
     for (performance in invoice.performances) {
         // 청구 내역을 출력한다.

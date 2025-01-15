@@ -1,3 +1,5 @@
 package chapter1
 
-data object StatementData
+data class StatementData(
+    val customer: String,
+)
