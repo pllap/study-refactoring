@@ -103,7 +103,7 @@ class ComedyCalculator(
 }
 
 fun createPerformanceCalculator(performance: Invoice.Performance, play: Play): PerformanceCalculator {
-    return when (play.name) {
+    return when (play.type) {
         "tragedy" -> TragedyCalculator(performance, play)
         "comedy" -> ComedyCalculator(performance, play)
         else -> throw RuntimeException("알 수 없는 장르: ${play.type}")
@@ -117,20 +117,20 @@ fun createStatementData(invoice: Invoice, plays: Map<String, Play>): StatementDa
 
     fun totalAmount(performances: List<Invoice.Performance>): Int {
         return performances
-            .map { PerformanceCalculator(it, playFor(it)).amount }
+            .map { createPerformanceCalculator(it, playFor(it)).amount }
             .reduce { total, amount -> total + amount }
     }
 
     fun totalVolumeCredits(performances: List<Invoice.Performance>): Int {
         return performances
-            .map { PerformanceCalculator(it, playFor(it)).volumeCredits }
+            .map { createPerformanceCalculator(it, playFor(it)).volumeCredits }
             .reduce { total, volumeCredits -> total + volumeCredits }
     }
 
     return StatementData(
         customer = invoice.customer,
         performances = invoice.performances.map {
-            val calculator = PerformanceCalculator(it, playFor(it))
+            val calculator = createPerformanceCalculator(it, playFor(it))
 
             StatementData.Performance(
                 play = calculator.play,
