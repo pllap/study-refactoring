@@ -105,7 +105,7 @@ fun createStatementData(invoice: Invoice, plays: Map<String, Play>): StatementDa
 
             StatementData.Performance(
                 play = calculator.play,
-                audience = it.audience,
+                audience = calculator.performance.audience,
                 amount = calculator.amount,
                 volumeCredits = calculator.volumeCredits,
             )
