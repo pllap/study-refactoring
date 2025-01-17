@@ -29,6 +29,20 @@ class PerformanceCalculator(
 
             return result
         }
+
+    val volumeCredits: Int
+        get() {
+            var result = 0
+
+            // 포인트를 적립한다.
+            result += maxOf(performance.audience - 30, 0)
+            // 희극 관객 5명마다 추가 포인트를 제공한다.
+            if ("comedy" == this.play.type) {
+                result += performance.audience / 5
+            }
+
+            return result
+        }
 }
 
 fun createStatementData(invoice: Invoice, plays: Map<String, Play>): StatementData {
@@ -93,7 +107,7 @@ fun createStatementData(invoice: Invoice, plays: Map<String, Play>): StatementDa
                 play = calculator.play,
                 audience = it.audience,
                 amount = calculator.amount,
-                volumeCredits = volumeCreditsFor(it),
+                volumeCredits = calculator.volumeCredits,
             )
         },
         totalAmount = totalAmount(invoice.performances),
