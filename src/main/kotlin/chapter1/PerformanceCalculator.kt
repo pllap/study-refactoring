@@ -51,6 +51,10 @@ class TragedyCalculator(
 ) : PerformanceCalculator(performance = performance, play = play) {
     override val amount: Int
         get() {
+            if (this.play.type != "tragedy") {
+                throw RuntimeException("오류 발생")
+            }
+
             var result = 40000
 
             if (performance.audience > 30) {
@@ -72,6 +76,10 @@ class ComedyCalculator(
 ) : PerformanceCalculator(performance = performance, play = play) {
     override val amount: Int
         get() {
+            if (this.play.type != "comedy") {
+                throw RuntimeException("오류 발생")
+            }
+
             var result = 30000
 
             if (performance.audience > 20) {
