@@ -1,5 +1,9 @@
 package chapter1
 
+class PerformanceCalculator(
+    val performance: Invoice.Performance,
+)
+
 fun createStatementData(invoice: Invoice, plays: Map<String, Play>): StatementData {
     fun playFor(performance: Invoice.Performance): Play {
         return plays[performance.playID] ?: throw RuntimeException("알 수 없는 장르: ${performance.playID}")
