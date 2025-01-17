@@ -45,23 +45,15 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     }
 
     fun totalAmount(performances: List<Invoice.Performance>): Int {
-        var result = 0
-
-        for (performance in performances) {
-            result += amountFor(performance)
-        }
-
-        return result
+        return performances
+            .map { amountFor(it) }
+            .reduce { total, amount -> total + amount }
     }
 
     fun totalVolumeCredits(performances: List<Invoice.Performance>): Int {
-        var result = 0
-
-        for (performance in performances) {
-            result += volumeCreditsFor(performance)
-        }
-
-        return result
+        return performances
+            .map { volumeCreditsFor(it) }
+            .reduce { total, volumeCredits -> total + volumeCredits }
     }
 
     val statementData = StatementData(
