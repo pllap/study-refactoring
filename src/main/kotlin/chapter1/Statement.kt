@@ -47,17 +47,22 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
 }
 
 fun renderPlainText(statementData: StatementData): String {
+    fun volumeCreditsFor(performance: StatementData.Performance): Int {
+        var result = 0
+        // 포인트를 적립한다.
+        result += maxOf(performance.audience - 30, 0)
+        // 희극 관객 5명마다 추가 포인트를 제공한다.
+        if ("comedy" == performance.play.type) {
+            result += performance.audience / 5
+        }
+        return result
+    }
 
     fun totalVolumeCredits(): Int {
         var result = 0
 
         for (performance in statementData.performances) {
-            // 포인트를 적립한다.
-            result += maxOf(performance.audience - 30, 0)
-            // 희극 관객 5명마다 추가 포인트를 제공한다.
-            if ("comedy" == performance.play.type) {
-                result += performance.audience / 5
-            }
+            result += volumeCreditsFor(performance)
         }
 
         return result
