@@ -5,15 +5,6 @@ import java.util.*
 
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     fun renderPlainText(statementData: StatementData): String {
-        fun usd(number: Int): String {
-            return NumberFormat.getCurrencyInstance(Locale.US)
-                .also {
-                    it.maximumFractionDigits = 2
-                    it.minimumFractionDigits = 2
-                }
-                .format(number / 100.0)
-        }
-
         var result = "청구 내역 (고객명: ${statementData.customer})\n"
 
         for (performance in statementData.performances) {
@@ -31,15 +22,6 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
 
 fun htmlStatement(invoice: Invoice, plays: Map<String, Play>): String {
     fun renderHtml(statementData: StatementData): String {
-        fun usd(number: Int): String {
-            return NumberFormat.getCurrencyInstance(Locale.US)
-                .also {
-                    it.maximumFractionDigits = 2
-                    it.minimumFractionDigits = 2
-                }
-                .format(number / 100.0)
-        }
-
         var result = "<h1>청구 내역 (고객명: ${statementData.customer})</h1>\n"
         result += "<table>\n"
         result += "<tr><th>연극</th><th>좌석 수</th><th>금액</th></tr>"
@@ -53,4 +35,13 @@ fun htmlStatement(invoice: Invoice, plays: Map<String, Play>): String {
     }
 
     return renderHtml(createStatementData(invoice, plays))
+}
+
+fun usd(number: Int): String {
+    return NumberFormat.getCurrencyInstance(Locale.US)
+        .also {
+            it.maximumFractionDigits = 2
+            it.minimumFractionDigits = 2
+        }
+        .format(number / 100.0)
 }
