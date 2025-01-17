@@ -103,11 +103,11 @@ class ComedyCalculator(
 }
 
 fun createPerformanceCalculator(performance: Invoice.Performance, play: Play): PerformanceCalculator {
-    when (play.name) {
-        "tragedy" -> return TragedyCalculator(performance, play)
-        "comedy" -> return ComedyCalculator(performance, play)
+    return when (play.name) {
+        "tragedy" -> TragedyCalculator(performance, play)
+        "comedy" -> ComedyCalculator(performance, play)
+        else -> throw RuntimeException("알 수 없는 장르: ${play.type}")
     }
-    return PerformanceCalculator(performance, play)
 }
 
 fun createStatementData(invoice: Invoice, plays: Map<String, Play>): StatementData {
