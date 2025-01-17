@@ -2,6 +2,7 @@ package chapter1
 
 class PerformanceCalculator(
     val performance: Invoice.Performance,
+    val play: Play,
 )
 
 fun createStatementData(invoice: Invoice, plays: Map<String, Play>): StatementData {
@@ -60,8 +61,10 @@ fun createStatementData(invoice: Invoice, plays: Map<String, Play>): StatementDa
     return StatementData(
         customer = invoice.customer,
         performances = invoice.performances.map {
+            val calculator = PerformanceCalculator(it, playFor(it))
+
             StatementData.Performance(
-                play = playFor(it),
+                play = calculator.play,
                 audience = it.audience,
                 amount = amountFor(it),
                 volumeCredits = volumeCreditsFor(it),
