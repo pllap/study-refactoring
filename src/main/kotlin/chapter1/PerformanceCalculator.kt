@@ -1,6 +1,6 @@
 package chapter1
 
-class PerformanceCalculator(
+open class PerformanceCalculator(
     val performance: Invoice.Performance,
     val play: Play,
 ) {
@@ -43,6 +43,24 @@ class PerformanceCalculator(
 
             return result
         }
+}
+
+class TragedyCalculator(
+    performance: Invoice.Performance,
+    play: Play,
+) : PerformanceCalculator(performance = performance, play = play)
+
+class ComedyCalculator(
+    performance: Invoice.Performance,
+    play: Play,
+) : PerformanceCalculator(performance = performance, play = play)
+
+fun createPerformanceCalculator(performance: Invoice.Performance, play: Play): PerformanceCalculator {
+    when (play.name) {
+        "tragedy" -> return TragedyCalculator(performance, play)
+        "comedy" -> return ComedyCalculator(performance, play)
+    }
+    return PerformanceCalculator(performance, play)
 }
 
 fun createStatementData(invoice: Invoice, plays: Map<String, Play>): StatementData {
