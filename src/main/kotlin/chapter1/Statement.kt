@@ -44,6 +44,26 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         return result
     }
 
+    fun totalAmount(performances: List<Invoice.Performance>): Int {
+        var result = 0
+
+        for (performance in performances) {
+            result += amountFor(performance)
+        }
+
+        return result
+    }
+
+    fun totalVolumeCredits(performances: List<Invoice.Performance>): Int {
+        var result = 0
+
+        for (performance in performances) {
+            result += volumeCreditsFor(performance)
+        }
+
+        return result
+    }
+
     val statementData = StatementData(
         customer = invoice.customer,
         performances = invoice.performances.map {
@@ -53,32 +73,15 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
                 amount = amountFor(it),
                 volumeCredits = volumeCreditsFor(it),
             )
-        }
+        },
+        totalAmount = totalAmount(invoice.performances),
+        totalVolumeCredits = totalVolumeCredits(invoice.performances),
     )
 
     return renderPlainText(statementData)
 }
 
 fun renderPlainText(statementData: StatementData): String {
-    fun totalVolumeCredits(): Int {
-        var result = 0
-
-        for (performance in statementData.performances) {
-            result += performance.volumeCredits
-        }
-
-        return result
-    }
-
-    fun totalAmount(): Int {
-        var result = 0
-
-        for (performance in statementData.performances) {
-            result += performance.amount
-        }
-
-        return result
-    }
 
     fun usd(number: Int): String {
         return NumberFormat.getCurrencyInstance(Locale.US)
@@ -96,7 +99,7 @@ fun renderPlainText(statementData: StatementData): String {
         result += "  ${performance.play.name}: ${usd(performance.amount)} (${performance.audience}석)\n"
     }
 
-    result += "총액: ${usd(totalAmount())}\n"
-    result += "적립 포인트: ${totalVolumeCredits()}점\n"
+    result += "총액: ${usd(statementData.totalAmount)}\n"
+    result += "적립 포인트: ${statementData.totalVolumeCredits}점\n"
     return result
 }
