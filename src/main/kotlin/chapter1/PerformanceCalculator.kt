@@ -3,7 +3,33 @@ package chapter1
 class PerformanceCalculator(
     val performance: Invoice.Performance,
     val play: Play,
-)
+) {
+    val amount: Int
+        get() {
+            var result: Int
+
+            when (this.play.type) {
+                "tragedy" -> {
+                    result = 40000
+                    if (performance.audience > 30) {
+                        result += 1000 * (performance.audience - 30)
+                    }
+                }
+
+                "comedy" -> {
+                    result = 30000
+                    if (performance.audience > 20) {
+                        result += 10000 + 500 * (performance.audience - 20)
+                    }
+                    result += 300 * performance.audience
+                }
+
+                else -> throw RuntimeException("알 수 없는 장르: ${this.play.type}")
+            }
+
+            return result
+        }
+}
 
 fun createStatementData(invoice: Invoice, plays: Map<String, Play>): StatementData {
     fun playFor(performance: Invoice.Performance): Play {
@@ -66,7 +92,7 @@ fun createStatementData(invoice: Invoice, plays: Map<String, Play>): StatementDa
             StatementData.Performance(
                 play = calculator.play,
                 audience = it.audience,
-                amount = amountFor(it),
+                amount = calculator.amount,
                 volumeCredits = volumeCreditsFor(it),
             )
         },
