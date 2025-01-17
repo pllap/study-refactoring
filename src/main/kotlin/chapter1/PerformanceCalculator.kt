@@ -6,42 +6,12 @@ open class PerformanceCalculator(
 ) {
     open val amount: Int
         get() {
-            var result: Int
-
-            when (this.play.type) {
-                "tragedy" -> {
-                    result = 40000
-                    if (performance.audience > 30) {
-                        result += 1000 * (performance.audience - 30)
-                    }
-                }
-
-                "comedy" -> {
-                    result = 30000
-                    if (performance.audience > 20) {
-                        result += 10000 + 500 * (performance.audience - 20)
-                    }
-                    result += 300 * performance.audience
-                }
-
-                else -> throw RuntimeException("알 수 없는 장르: ${this.play.type}")
-            }
-
-            return result
+            throw NotImplementedError("서브클래스에서 구현해야 함")
         }
 
     open val volumeCredits: Int
         get() {
-            var result = 0
-
-            // 포인트를 적립한다.
-            result += maxOf(performance.audience - 30, 0)
-            // 희극 관객 5명마다 추가 포인트를 제공한다.
-            if ("comedy" == this.play.type) {
-                result += performance.audience / 5
-            }
-
-            return result
+            throw NotImplementedError("서브클래스에서 구현해야 함")
         }
 }
 
