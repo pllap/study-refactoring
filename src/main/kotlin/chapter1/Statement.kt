@@ -33,6 +33,17 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         return result
     }
 
+    fun volumeCreditsFor(performance: Invoice.Performance): Int {
+        var result = 0
+        // 포인트를 적립한다.
+        result += maxOf(performance.audience - 30, 0)
+        // 희극 관객 5명마다 추가 포인트를 제공한다.
+        if ("comedy" == playFor(performance).type) {
+            result += performance.audience / 5
+        }
+        return result
+    }
+
     val statementData = StatementData(
         customer = invoice.customer,
         performances = invoice.performances.map {
@@ -40,9 +51,11 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
                 play = playFor(it),
                 audience = it.audience,
                 amount = amountFor(it),
+                volumeCredits = volumeCreditsFor(it),
             )
         }
     )
+
     return renderPlainText(statementData)
 }
 

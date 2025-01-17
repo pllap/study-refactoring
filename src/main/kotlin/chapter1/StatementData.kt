@@ -8,5 +8,6 @@ data class StatementData(
         val play: Play,
         val audience: Int,
         val amount: Int,
+        val volumeCredits: Int,
     )
 }
